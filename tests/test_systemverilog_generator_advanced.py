@@ -218,6 +218,18 @@ class TestMSIXAdvancedFunctionality:
                 vector_num = i // 4
                 assert value & 0xFF == vector_num  # Low 8 bits should be vector number
 
+    def test_msix_table_placeholder_generation(self):
+        from src.templating.sv_module_generator import SVModuleGenerator
+        from src.templating.template_renderer import TemplateRenderer
+        import logging
+
+        renderer = TemplateRenderer()
+        gen = SVModuleGenerator(renderer, logging.getLogger(__name__))
+        hex_data = gen._generate_msix_table_init(2, {"allow_msix_placeholder": True})
+        lines = hex_data.strip().split("\n")
+        assert len(lines) == 8
+        assert lines[0] == "FEE00000"
+
     def test_read_msix_table_successful_mapping(
         self, base_generator, standard_msix_context
     ):

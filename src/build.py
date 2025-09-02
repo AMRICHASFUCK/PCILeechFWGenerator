@@ -90,6 +90,7 @@ class BuildConfiguration:
     output_dir: Path
     enable_profiling: bool = True
     preload_msix: bool = True
+    allow_msix_placeholder: bool = False
     profile_duration: int = DEFAULT_PROFILE_DURATION
     parallel_writes: bool = True
     max_workers: int = MAX_PARALLEL_FILE_WRITES
@@ -660,6 +661,7 @@ class ConfigurationManager:
             output_dir=Path(args.output).resolve(),
             enable_profiling=args.profile > 0,
             preload_msix=getattr(args, "preload_msix", True),
+            allow_msix_placeholder=getattr(args, "allow_msix_placeholder", False),
             profile_duration=args.profile,
             output_template=getattr(args, "output_template", None),
             donor_template=getattr(args, "donor_template", None),
@@ -969,6 +971,7 @@ class FirmwareBuilder:
                 template_dir=None,
                 output_dir=self.config.output_dir,
                 enable_behavior_profiling=self.config.enable_profiling,
+                allow_msix_placeholder=self.config.allow_msix_placeholder,
             )
         )
 
@@ -1287,6 +1290,11 @@ Examples:
         dest="preload_msix",
         default=True,
         help="Disable preloading of MSI-X data before VFIO binding",
+    )
+    parser.add_argument(
+        "--allow-msix-placeholder",
+        action="store_true",
+        help="Allow generation of placeholder MSI-X table data when hardware reads fail",
     )
     parser.add_argument(
         "--output-template",
