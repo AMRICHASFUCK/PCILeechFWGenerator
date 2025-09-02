@@ -537,6 +537,21 @@ class SVModuleGenerator:
                         0x00000000 | i,  # Message Data
                         0x00000000,  # Vector Control
                     ]
+            )
+            return "\n".join(f"{value:08X}" for value in table_data) + "\n"
+
+        if context.get("allow_msix_placeholder") or context.get(
+            "template_context", {}
+        ).get("allow_msix_placeholder"):
+            table_data = []
+            for i in range(num_vectors):
+                table_data.extend(
+                    [
+                        0xFEE00000 + (i << 4),
+                        0x00000000,
+                        0x00000000 | i,
+                        0x00000000,
+                    ]
                 )
             return "\n".join(f"{value:08X}" for value in table_data) + "\n"
 
