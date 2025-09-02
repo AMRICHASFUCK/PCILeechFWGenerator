@@ -79,6 +79,7 @@ class BuildConfig:
     fallback_mode: str = "none"  # "none", "prompt", or "auto"
     allowed_fallbacks: List[str] = field(default_factory=list)
     denied_fallbacks: List[str] = field(default_factory=list)
+    allow_msix_placeholder: bool = False
     # active device configuration
     disable_active_device: bool = False
     active_timer_period: int = 100000
@@ -109,6 +110,8 @@ class BuildConfig:
             args.append(f"--output-template {self.output_template}")
         if self.donor_template:
             args.append(f"--donor-template {self.donor_template}")
+        if self.allow_msix_placeholder:
+            args.append("--allow-msix-placeholder")
 
         return args
 

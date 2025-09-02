@@ -166,6 +166,11 @@ def build_sub(parser: argparse._SubParsersAction):
         action="store_true",
         help="Enable legacy compatibility mode (temporarily restores old fallback behavior)",
     )
+    fallback_group.add_argument(
+        "--allow-msix-placeholder",
+        action="store_true",
+        help="Generate placeholder MSI-X table data when hardware reading fails",
+    )
 
 
 def flash_sub(parser: argparse._SubParsersAction):
@@ -304,6 +309,7 @@ def main(argv: Optional[List[str]] = None):
             active_priority=getattr(args, "active_priority", 15),
             output_template=getattr(args, "output_template", None),
             donor_template=getattr(args, "donor_template", None),
+            allow_msix_placeholder=getattr(args, "allow_msix_placeholder", False),
         )
         run_build(cfg)
 
