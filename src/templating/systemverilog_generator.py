@@ -356,6 +356,21 @@ class SystemVerilogGenerator:
                     "enable_perf_counters": False,
                 }
 
+            # If MSI-X is supported but table entries are missing, attempt to
+            # read actual values from hardware.
+            msix_cfg = enhanced_context.get("msix_config", {})
+            msix_data = enhanced_context.get("msix_data", {})
+            if (
+                msix_cfg.get("is_supported")
+                and msix_cfg.get("num_vectors", 0) > 0
+                and not msix_data.get("table_entries")
+            ):
+                table_entries = self._read_actual_msix_table(enhanced_context)
+                if table_entries:
+                    enhanced_context.setdefault("msix_data", {})[
+                        "table_entries"
+                    ] = table_entries
+
             # Create proper active_device_config instead of empty dict fallback
             if "active_device_config" not in enhanced_context:
                 enhanced_context["active_device_config"] = (
