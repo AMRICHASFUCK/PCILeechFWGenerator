@@ -481,6 +481,11 @@ Environment Variables:
         default=3600,
         help="Timeout for Vivado operations in seconds (default: 3600)",
     )
+    build_parser.add_argument(
+        "--allow-msix-placeholder",
+        action="store_true",
+        help="Use placeholder MSI-X values when hardware MSI-X table reads fail",
+    )
 
     # TUI command
     tui_parser = subparsers.add_parser("tui", help="Launch interactive TUI")
@@ -617,6 +622,8 @@ def handle_build(args):
             cli_args.append("--advanced-sv")
         if args.enable_variance:
             cli_args.append("--enable-variance")
+        if args.allow_msix_placeholder:
+            cli_args.append("--allow-msix-placeholder")
 
         if args.generate_donor_template:
             cli_args.extend(["--output-template", args.generate_donor_template])
