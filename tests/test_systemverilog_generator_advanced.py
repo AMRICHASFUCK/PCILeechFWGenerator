@@ -230,6 +230,17 @@ class TestMSIXAdvancedFunctionality:
         assert len(lines) == 8
         assert lines[0] == "FEE00000"
 
+    def test_generate_modules_msix_placeholder(
+        self, base_generator, standard_msix_context
+    ):
+        standard_msix_context["allow_msix_placeholder"] = True
+        standard_msix_context["msix_config"]["num_vectors"] = 2
+        with patch.object(base_generator, "_read_actual_msix_table", return_value=None):
+            modules = base_generator.generate_pcileech_modules(standard_msix_context)
+        table_lines = modules["msix_table_init.hex"].strip().split("\n")
+        assert table_lines[0] == "FEE00000"
+        assert len(table_lines) == 8
+
     def test_read_msix_table_successful_mapping(
         self, base_generator, standard_msix_context
     ):

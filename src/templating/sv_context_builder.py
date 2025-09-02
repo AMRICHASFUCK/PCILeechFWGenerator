@@ -52,6 +52,10 @@ class SVContextBuilder:
         # Start with base context
         enhanced_context = self._create_base_context(template_context)
 
+        # Propagate optional feature flags
+        if template_context.get("allow_msix_placeholder"):
+            enhanced_context["allow_msix_placeholder"] = True
+
         # Extract and normalize device config
         device_config_dict = self._normalize_device_config(
             template_context.get("device_config", {})
