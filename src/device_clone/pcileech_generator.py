@@ -81,6 +81,9 @@ class PCILeechGenerationConfig:
     # Donor template
     donor_template: Optional[Dict[str, Any]] = None
 
+    # MSI-X handling
+    allow_msix_placeholder: bool = False
+
 
 class PCILeechGenerator:
     """
@@ -264,6 +267,8 @@ class PCILeechGenerator:
                     interrupt_strategy,
                     interrupt_vectors,
                 )
+                if self.config.allow_msix_placeholder:
+                    template_context["allow_msix_placeholder"] = True
 
             # VFIO cleanup happens here automatically when exiting the 'with' block
             log_info_safe(
